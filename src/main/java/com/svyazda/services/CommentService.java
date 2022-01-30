@@ -25,7 +25,7 @@ public class CommentService implements Servable<Comment> {
     }
 
     @Override
-    public Comment findById(String id) {
+    public Comment findById(Integer id) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -43,7 +43,7 @@ public class CommentService implements Servable<Comment> {
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(Integer id) {
         // TODO Auto-generated method stub
         
     }

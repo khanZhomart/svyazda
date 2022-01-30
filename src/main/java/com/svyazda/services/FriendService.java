@@ -3,8 +3,6 @@ package com.svyazda.services;
 import java.util.Date;
 import java.util.List;
 
-import com.svyazda.dto.UserDTO;
-import com.svyazda.dto.converters.UserConverter;
 import com.svyazda.entities.Friend;
 import com.svyazda.entities.User;
 import com.svyazda.repositories.FriendRepository;
@@ -41,5 +39,28 @@ public class FriendService {
         friend.setSecondUser(user2);
 
         this.friendRepository.save(friend);
+    }
+
+    public List<Friend> findAllByUserId(Integer id) throws UserDoesNotExistException {
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException(id));
+
+        return this.friendRepository.findAllByFirstUser(user);
+    }
+
+    public void acceptFriend(Integer accepterId) throws UserDoesNotExistException {
+        User accepter = this.userRepository.findById(accepterId).orElseThrow(() -> new UserDoesNotExistException(accepterId));
+
+        Friend friend = this.friendRepository.findByFirstUserOrSecondUser(accepter).orElseThrow(() -> new UserDoesNotExistException(accepterId));
+
+        friend.setAccepted(true);
+        this.friendRepository.save(friend);
+    }
+
+    public void declineFriend(Integer declinerId) throws UserDoesNotExistException {
+        User decliner = this.userRepository.findById(declinerId).orElseThrow(() -> new UserDoesNotExistException(declinerId));
+
+        Friend friend = this.friendRepository.findByFirstUserOrSecondUser(decliner).orElseThrow(() -> new UserDoesNotExistException(declinerId));
+
+        this.friendRepository.delete(friend);
     }
 }

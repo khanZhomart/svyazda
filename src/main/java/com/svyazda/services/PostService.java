@@ -25,7 +25,7 @@ public class PostService implements Servable<Post> {
     }
 
     @Override
-    public Post findById(String id) {
+    public Post findById(Integer id) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -43,7 +43,7 @@ public class PostService implements Servable<Post> {
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(Integer id) {
         // TODO Auto-generated method stub
         
     }
