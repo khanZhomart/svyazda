@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class CommentService implements CrudService<Comment> {
+public class CommentService implements Servable<Comment> {
     private final CommentRepository commentRepository;
 
     @Override

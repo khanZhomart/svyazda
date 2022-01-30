@@ -2,7 +2,7 @@ package com.svyazda.services;
 
 import java.util.List;
 
-interface CrudService<T> {
+interface Servable<T> {
     
     List<T> findAll();
     T findById(String id);

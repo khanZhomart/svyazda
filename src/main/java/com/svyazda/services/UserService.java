@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @AllArgsConstructor
 @Slf4j
-class UserService implements CrudService<User> {
+class UserService implements Servable<User> {
     private final UserRepository userRepository;
 
     @Override

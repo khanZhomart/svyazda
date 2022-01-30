@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class PostService implements CrudService<Post> {
+public class PostService implements Servable<Post> {
     private final PostRepository postRepository;
 
     @Override
