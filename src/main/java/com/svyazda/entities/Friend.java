@@ -29,12 +29,14 @@ public class Friend {
     private Date createdDate;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "first_user_id", referencedColumnName = "userId")
-    private User firstUser;
+    @JoinColumn(name = "accepter_id", referencedColumnName = "userId")
+    private User accepter; // Тот кто принимает запросы в друзья
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "second_user_id", referencedColumnName = "userId")
-    private User secondUser;
+    @JoinColumn(name = "sender_id", referencedColumnName = "userId")
+    private User sender; // Тот кто отправляет запросы в друзья
 
     private boolean accepted;
+
+    private String type;
 }

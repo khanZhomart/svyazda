@@ -21,16 +21,16 @@ public class FriendController {
     private final FriendService friendService; 
 
     @PostMapping("/")
-    public ResponseEntity<?> saveFriend(@RequestParam String friendId, @RequestParam String senderId) throws NumberFormatException, UserDoesNotExistException {
-        User user = this.userService.findById(Integer.parseInt(senderId));
-        this.friendService.save(user, Integer.parseInt(friendId));
+    public ResponseEntity<?> saveFriend(@RequestParam String accepterId, @RequestParam String senderId) throws NumberFormatException, UserDoesNotExistException {
+        User accepter = this.userService.findById(Integer.parseInt(accepterId));
+        this.friendService.save(accepter, Integer.parseInt(senderId));
         return ResponseEntity.ok().body("created");
     }
 
     // TODO: исправить логическую ошибку метода acceptFriend в friendService
     @PostMapping("/accept/")
-    public ResponseEntity<?> acceptFriend(@RequestParam String friendId, @RequestParam String userId) {
+    public ResponseEntity<?> acceptFriend(@RequestParam String accepterId/*, @RequestParam String userId*/) throws UserDoesNotExistException {
 
-        return null;
+        return ResponseEntity.ok(this.friendService.findAllByUserId(Integer.parseInt(accepterId)));
     }
 }

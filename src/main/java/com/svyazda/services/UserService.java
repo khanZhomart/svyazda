@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.svyazda.entities.User;
 import com.svyazda.repositories.UserRepository;
+import com.svyazda.utils.exceptions.UserAlreadyExistException;
 import com.svyazda.utils.exceptions.UserDoesNotExistException;
 
 import org.springframework.stereotype.Service;
@@ -32,6 +33,10 @@ public class UserService implements Servable<User> {
 
     @Override
     public User save(User payload) {
+
+//        if (this.userRepository.existsByEmail(payload.getEmail()))
+//            throw new UserAlreadyExistException("This email already registered");
+
         return this.userRepository.save(payload);
     }
 

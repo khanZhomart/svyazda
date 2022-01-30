@@ -21,22 +21,24 @@ public class FriendService {
     private FriendRepository friendRepository;
     private UserRepository userRepository;
 
-    public void save(User user1, Integer id) throws UserDoesNotExistException {
-        User user2 = this.userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException(id));
+    public void save(User accepter, Integer senderId) throws UserDoesNotExistException {
+        User sender = this.userRepository.findById(senderId).orElseThrow(() -> new UserDoesNotExistException(senderId));
 
-        if (user1.getUserId() > user2.getUserId()) {
-            User temp = user1;
-            user1 = user2;
-            user2 = temp;
-        }
+//        if (accepter.getUserId() > sender.getUserId()) { // Этот кусок кода менял получателя и отправителя местами.
+//        Из за этого список запросов в друзья был неправильный
+//            User temp = accepter;
+//            accepter = sender;
+//            sender = temp;
+//        }
 
-        if (this.friendRepository.existsByFirstUserAndSecondUser(user1, user2))
+        if (this.friendRepository.existsByAccepterAndSender(accepter, sender))
             return;
 
         Friend friend = new Friend();
         friend.setCreatedDate(new Date());
-        friend.setFirstUser(user1);
-        friend.setSecondUser(user2);
+        friend.setAccepter(accepter);
+        friend.setSender(sender);
+        friend.setType("friendRequest");
 
         this.friendRepository.save(friend);
     }
@@ -44,7 +46,7 @@ public class FriendService {
     public List<Friend> findAllByUserId(Integer id) throws UserDoesNotExistException {
         User user = this.userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException(id));
 
-        return this.friendRepository.findAllByFirstUser(user);
+        return this.friendRepository.findAllByAccepter(user);
     }
 
 //    public void acceptFriend(Integer accepterId) throws UserDoesNotExistException {
