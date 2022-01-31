@@ -46,7 +46,7 @@ public class FriendService {
 
         return this.friendRepository.findAllByFirstUser(user);
     }
-
+    /*
     public void acceptFriend(Integer accepterId) throws UserDoesNotExistException {
         User accepter = this.userRepository.findById(accepterId).orElseThrow(() -> new UserDoesNotExistException(accepterId));
 
@@ -63,4 +63,5 @@ public class FriendService {
 
         this.friendRepository.delete(friend);
     }
+    */
 }

@@ -20,5 +20,5 @@ public interface FriendRepository extends CrudRepository<Friend, Integer> {
     Optional<Friend> findByFirstUser(User user);
     Optional<Friend> findBySecondUser(User user);
 
-    Optional<Friend> findByFirstUserOrSecondUser(User user);
+    Optional<Friend> findByFirstUserOrSecondUser(User user1, User user2);
 }
