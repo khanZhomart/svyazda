@@ -17,8 +17,14 @@ public interface FriendRepository extends CrudRepository<Friend, Integer> {
     List<Friend> findAllByAccepter(User user);
     List<Friend> findAllBySender(User user);
 
+//    List<Friend> findAllByAccepterAndTypeOrSenderAndType(User accepter, String type, User sender, String type2);
+    List<Friend> findAllByAccepterAndAcceptedOrSenderAndAccepted(User accepter, boolean accepted, User sender, boolean accepted1);
+    List<Friend> findAllByAccepterAndAccepted(User accepter, boolean accepted);
+
     Optional<Friend> findByAccepter(User user);
     Optional<Friend> findBySender(User user);
 
-    Optional<Friend> findByAccepterOrSender(User firstUser, User secondUser);
+    void deleteByAccepterAndSender(User accepter, User sender);
+
+    Optional<Friend> findByAccepterAndSender(User firstUser, User secondUser);
 }
