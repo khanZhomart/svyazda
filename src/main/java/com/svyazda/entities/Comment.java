@@ -25,6 +25,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentId;
 
+
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
     private String text;

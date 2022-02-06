@@ -1,13 +1,27 @@
 package com.svyazda.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.svyazda.entities.User;
+import com.svyazda.services.UserService;
+import com.svyazda.utils.exceptions.UserAlreadyExistException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/")
 @AllArgsConstructor
-class UserController {
+public class UserController {
+    private final UserService userService;
+
+    @PostMapping("/registration")
+    public ResponseEntity<?> saveUser(@RequestBody User user) throws UserAlreadyExistException {
+        try {
+            this.userService.save(user);
+            return ResponseEntity.ok().body("created");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Registration error");
+        }
+    }
     
 }

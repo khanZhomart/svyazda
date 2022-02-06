@@ -12,13 +12,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FriendRepository extends CrudRepository<Friend, Integer> {
     
-    boolean existsByFirstUserAndSecondUser(User user1, User user2);
+    boolean existsByAccepterAndSender(User user1, User user2);
 
-    List<Friend> findAllByFirstUser(User user);
-    List<Friend> findAllBySecondUser(User user);
+    List<Friend> findAllByAccepter(User user);
+    List<Friend> findAllBySender(User user);
 
-    Optional<Friend> findByFirstUser(User user);
-    Optional<Friend> findBySecondUser(User user);
+//    List<Friend> findAllByAccepterAndTypeOrSenderAndType(User accepter, String type, User sender, String type2);
+    List<Friend> findAllByAccepterAndAcceptedOrSenderAndAccepted(User accepter, boolean accepted, User sender, boolean accepted1);
+    List<Friend> findAllByAccepterAndAccepted(User accepter, boolean accepted);
 
-    Optional<Friend> findByFirstUserOrSecondUser(User user1, User user2);
+    Optional<Friend> findByAccepter(User user);
+    Optional<Friend> findBySender(User user);
+
+    void deleteByAccepterAndSender(User accepter, User sender);
+
+    Optional<Friend> findByAccepterAndSender(User firstUser, User secondUser);
 }
