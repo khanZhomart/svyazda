@@ -1,11 +1,14 @@
 package com.svyazda.entities;
 
 import java.sql.Date;
+import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,4 +37,7 @@ public class User {
     private String username;
 
     private String password;
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private Collection<Role> roles;
 }

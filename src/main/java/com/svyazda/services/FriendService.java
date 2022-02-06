@@ -12,11 +12,9 @@ import com.svyazda.utils.exceptions.UserDoesNotExistException;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
-@Slf4j
 public class FriendService {
     private FriendRepository friendRepository;
     private UserRepository userRepository;
