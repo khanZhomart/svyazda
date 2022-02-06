@@ -55,7 +55,6 @@ public class UserService implements Servable<User>, UserDetailsService {
 
     @Override
     public User save(User payload) {
-
         payload.setPassword(passwordEncoder.encode(payload.getPassword()));
 
         return this.userRepository.save(payload);

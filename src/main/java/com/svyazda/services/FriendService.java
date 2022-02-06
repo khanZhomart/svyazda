@@ -19,22 +19,16 @@ public class FriendService {
     private FriendRepository friendRepository;
     private UserRepository userRepository;
 
-    public void save(User user1, Integer id) throws UserDoesNotExistException {
-        User user2 = this.userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException(id));
+    public void save(User accepter, Integer senderId) throws UserDoesNotExistException {
+        User sender = this.userRepository.findById(senderId).orElseThrow(() -> new UserDoesNotExistException(senderId));
 
-        if (user1.getUserId() > user2.getUserId()) {
-            User temp = user1;
-            user1 = user2;
-            user2 = temp;
-        }
-
-        if (this.friendRepository.existsByFirstUserAndSecondUser(user1, user2))
+        if (this.friendRepository.existsByAccepterAndSender(accepter, sender))
             return;
 
         Friend friend = new Friend();
         friend.setCreatedDate(new Date());
-        friend.setFirstUser(user1);
-        friend.setSecondUser(user2);
+        friend.setAccepter(accepter);
+        friend.setSender(sender);
 
         this.friendRepository.save(friend);
     }
@@ -42,24 +36,23 @@ public class FriendService {
     public List<Friend> findAllByUserId(Integer id) throws UserDoesNotExistException {
         User user = this.userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException(id));
 
-        return this.friendRepository.findAllByFirstUser(user);
-    }
-    /*
-    public void acceptFriend(Integer accepterId) throws UserDoesNotExistException {
-        User accepter = this.userRepository.findById(accepterId).orElseThrow(() -> new UserDoesNotExistException(accepterId));
-
-        Friend friend = this.friendRepository.findByFirstUserOrSecondUser(accepter).orElseThrow(() -> new UserDoesNotExistException(accepterId));
-
-        friend.setAccepted(true);
-        this.friendRepository.save(friend);
+        return this.friendRepository.findAllByAccepter(user);
     }
 
-    public void declineFriend(Integer declinerId) throws UserDoesNotExistException {
-        User decliner = this.userRepository.findById(declinerId).orElseThrow(() -> new UserDoesNotExistException(declinerId));
+    public List<Friend> findAllFriends(Integer id, String type) throws Exception {
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistException(id));
 
-        Friend friend = this.friendRepository.findByFirstUserOrSecondUser(decliner).orElseThrow(() -> new UserDoesNotExistException(declinerId));
+        if (type.equals("friendRequest")) {
+            return this.friendRepository.findAllByAccepterAndAccepted(user, false);
+        }
+        if (type.equals("friend")) {
+            return this.friendRepository.findAllByAccepterAndAcceptedOrSenderAndAccepted(user, true, user, true);
+        }
 
-        this.friendRepository.delete(friend);
+        throw new Exception("Incorrect type!");
     }
-    */
+
+    public void acceptFriend(Integer accepterId, Integer senderId) throws UserDoesNotExistException {
+
+    }
 }
