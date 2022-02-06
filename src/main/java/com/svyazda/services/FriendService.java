@@ -24,13 +24,6 @@ public class FriendService {
     public void save(User accepter, Integer senderId) throws UserDoesNotExistException {
         User sender = this.userRepository.findById(senderId).orElseThrow(() -> new UserDoesNotExistException(senderId));
 
-//        if (accepter.getUserId() > sender.getUserId()) { // Этот кусок кода менял получателя и отправителя местами.
-//        Из за этого список запросов в друзья был неправильный
-//            User temp = accepter;
-//            accepter = sender;
-//            sender = temp;
-//        }
-
         if (this.friendRepository.existsByAccepterAndSender(accepter, sender))
             return;
 
@@ -62,22 +55,6 @@ public class FriendService {
     }
 
     public void acceptFriend(Integer accepterId, Integer senderId) throws UserDoesNotExistException {
-        User accepter = this.userRepository.findById(accepterId).orElseThrow(() -> new UserDoesNotExistException(accepterId));
-        User sender = this.userRepository.findById(senderId).orElseThrow(() -> new UserDoesNotExistException(senderId));
 
-        Friend friend = this.friendRepository.findByAccepterAndSender(accepter, sender).orElseThrow(() -> new UserDoesNotExistException(accepterId + senderId));
-
-        friend.setAccepted(true);
-
-        this.friendRepository.save(friend);
-    }
-
-    public void declineFriend(Integer declinerId, Integer senderId) throws UserDoesNotExistException {
-        User decliner = this.userRepository.findById(declinerId).orElseThrow(() -> new UserDoesNotExistException(declinerId));
-        User sender = this.userRepository.findById(senderId).orElseThrow(() -> new UserDoesNotExistException(senderId));
-
-        Friend friend = this.friendRepository.findByAccepterAndSender(decliner, sender).orElseThrow(() -> new UserDoesNotExistException(declinerId));
-
-        this.friendRepository.delete(friend);
     }
 }
