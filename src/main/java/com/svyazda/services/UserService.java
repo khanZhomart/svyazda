@@ -74,9 +74,6 @@ public class UserService implements UserDetailsService {
     public User save(User payload) {
         payload.setPassword(passwordEncoder.encode(payload.getPassword()));
         payload.setCreatedAt(new java.sql.Date(new java.util.Date().getTime()));
-        if (payload.getRoles().size() == 0) {
-            addRoleToUser(payload.getUsername(), "ROLE_USER");
-        }
         return userRepository.save(payload);
     }
 

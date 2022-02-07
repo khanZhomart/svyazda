@@ -26,7 +26,9 @@ class UserController {
 
     @PostMapping("/")
     public ResponseEntity<?> save(@RequestBody User payload) throws NumberFormatException {
-        return ResponseEntity.ok(userService.save(payload));
+        User user = userService.save(payload);
+        userService.addRoleToUser(user.getUsername(), "ROLE_USER");
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/")
