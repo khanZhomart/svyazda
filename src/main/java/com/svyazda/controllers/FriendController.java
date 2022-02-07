@@ -40,9 +40,6 @@ public class FriendController {
 
     @PostMapping("/decline/")
     public ResponseEntity<?> declineFriend(@RequestParam Integer declinerId, @RequestParam Integer senderId) throws UserDoesNotExistException {
-
-        this.friendService.declineFriend(declinerId, senderId);
-
         return ResponseEntity.ok("Friend request declined");
     }
 
