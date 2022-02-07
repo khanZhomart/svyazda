@@ -1,16 +1,13 @@
 package com.svyazda.entities;
 
-import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.sql.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.svyazda.enums.Visibility;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
@@ -28,16 +25,27 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
-
+    private Long userId;
+    private String username = "user";
+    private String password;
+    private Visibility profilePageVisibility = Visibility.ALL;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
 
-    private String email;
-    private String username;
 
-    private String password;
+    @ManyToMany
+    @JoinColumn(referencedColumnName = "userId")
+    @JsonIgnore
+    Collection<User> friendRequests = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    private Collection<Role> roles;
+
+    @ManyToMany
+    @JoinColumn(name = "friends", referencedColumnName = "userId")
+    @JsonIgnore
+    Collection<User> friends = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Collection<Role> roles = new ArrayList<>();
 }
+

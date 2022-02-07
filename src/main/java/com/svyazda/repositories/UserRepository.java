@@ -1,6 +1,5 @@
 package com.svyazda.repositories;
 
-import java.util.Optional;
 
 import com.svyazda.entities.User;
 
@@ -10,10 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
-    boolean existsByEmail(String email);
-    
-    boolean existsByUsername(String username);
-
+public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByUsername(String username);
 }
