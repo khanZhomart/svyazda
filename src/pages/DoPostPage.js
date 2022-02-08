@@ -34,6 +34,7 @@ const DoPostPage = () => {
 
     const submitHandler = (event) => {
         event.preventDefault()
+        console.log(visibility)
         axios.post('http://localhost:8080/post-api/',
             { title: title, text: text, disabledComments: disabledComments, visibility: visibility }
             ,
@@ -46,7 +47,7 @@ const DoPostPage = () => {
         )
         setText('')
         setTitle('')
-        setVisibility('')
+        setVisibility('ALL')
         setDisabledComments(false)
     }
 

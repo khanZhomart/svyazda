@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom'
 const PostsPage = () => {
 
     const [posts, setPosts] = useState([])
-    const {appToken, setAppToken, appUsername, setAppUsername} = useContext(UserContext)
+    const {appToken} = useContext(UserContext)
 
     useEffect(() => {
         axios.get('http://localhost:8080/post-api/',

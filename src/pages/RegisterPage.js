@@ -29,10 +29,9 @@ const RegisterPage = () => {
     return (
         <div className="register-page">
             <h1>Register</h1>
-            <input placeholder='username' value={username} onChange={usernameHandler} />
-            <input placeholder='password' value={password} onChange={passwordHandler} />
-            <button onClick={submitHandler}>register</button>
-           
+            <input placeholder='username'  onChange={usernameHandler} />
+            <input placeholder='password'  onChange={passwordHandler} />
+            <button onClick={submitHandler}>register</button>  
         </div>
     )
 }

@@ -8,6 +8,7 @@ const MyProfilePage = () => {
 
     const [profile, setProfile] = useState({})
     const {appToken} = useContext(UserContext)
+    const [success, setSuccess] = useState(true)
 
     useEffect(() => {
         axios.get('http://localhost:8080/user-api/profile?id=0',
@@ -22,21 +23,24 @@ const MyProfilePage = () => {
             setProfile(response.data)
             console.log(response.data)
         })
-    }, [])
+    }, [success])
 
-    const enableComments = () => {
-        axios.put('http://localhost:8080/post-api/enable-comment?postId=1', {},
+    const enableComments = async () => {
+        await axios.put('http://localhost:8080/post-api/enable-comment?postId=1', {},
         {
             headers: 
             {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${appToken}`
             }
-        }).then(response => console.log(response.data))
+        }).then(response => {
+            console.log(response)
+            setSuccess(!success)
+            
+        })
     }
 
     const disableComments = async () => {
-        console.log('sdf')
         await axios.put('http://localhost:8080/post-api/disable-comment?postId=1', {},
         {
             headers: 
@@ -45,7 +49,8 @@ const MyProfilePage = () => {
                 'Authorization': `Bearer ${appToken}`
             }
         }).then(response => {
-            
+            console.log(response)
+            setSuccess(!success)
         })
     }
 
@@ -61,7 +66,6 @@ const MyProfilePage = () => {
                     <p>{post.text}</p>
                     ---
                     <p>author: {post.author.username}</p>
-                    <p>posted on: {post.createdAt}</p>
                     {post.disabledComments ? <div><p>comments disabled</p> <button onClick={enableComments}>enable</button></div> : <div><NavLink to={`/post-comments/${post.postId}`} >comments section</NavLink><button onClick={disableComments}>disable</button></div> }
                 </div>
                 <hr></hr>
