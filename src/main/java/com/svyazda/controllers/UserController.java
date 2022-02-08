@@ -44,9 +44,7 @@ class UserController {
 
     @DeleteMapping("/")
     public ResponseEntity<?> remove(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String username = UserUtil.getUsernameByToken(request, response);
-        userService.remove(username);
-        return ResponseEntity.ok("removed");
+        return ResponseEntity.ok(userService.remove(UserUtil.getUsernameByToken(request, response)));
     }
 
     @PutMapping("/")

@@ -45,6 +45,7 @@ public class CommentService {
             throw new Exception();
         }
         comment.setAuthor(userRepository.findByUsername(username).get());
+        comment.setText(commentForm.text);
         comment.setPost(post);
         comment.setCreatedAt(new Date(new java.util.Date().getTime()));
         return commentRepository.save(comment);

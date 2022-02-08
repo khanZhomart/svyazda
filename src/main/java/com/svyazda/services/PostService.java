@@ -35,10 +35,14 @@ public class PostService {
 
     public Collection<Post> findAllWithVisibilityAuthorizedOrFriend(String username) {
         Collection<Post> allPosts = postRepository.findAllByVisibility(Visibility.ALL).get();
+        if (username == "") {
+            return allPosts;
+        }
         Collection<Post> authPosts = postRepository.findAllByVisibility(Visibility.AUTHORIZED).get();
         Stream<Post> combinedStream = Stream.concat(allPosts.stream(), authPosts.stream());
 
         User user = userRepository.findByUsername(username).get();
+
         Collection<User> friends = user.getFriends();
         for (User friend: friends) {
             Collection<Post> friendPosts = postRepository.findByAuthor(friend).get();
@@ -46,6 +50,10 @@ public class PostService {
                     friendPost -> friendPost.getVisibility() == Visibility.FRIENDS).collect(Collectors.toList());
             combinedStream = Stream.concat(combinedStream,  friendPosts.stream());
         }
+        Collection<Post> myPostsForFriends = postRepository.findByAuthor(user).get();
+        myPostsForFriends = myPostsForFriends.stream().filter(
+                post -> post.getVisibility() == Visibility.FRIENDS).collect(Collectors.toList());
+        combinedStream = Stream.concat(combinedStream, myPostsForFriends.stream());
         return combinedStream.collect(Collectors.toList());
     }
 
