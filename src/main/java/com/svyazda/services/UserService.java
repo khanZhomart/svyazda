@@ -20,7 +20,9 @@ import com.svyazda.repositories.RoleRepository;
 import com.svyazda.repositories.UserRepository;
 import com.svyazda.enums.Visibility;
 
+
 import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,7 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 
 @AllArgsConstructor
 @Service
@@ -62,13 +63,19 @@ public class UserService implements UserDetailsService {
     }
 
     public ProfileInfo getProfileInfo(Long userId, String username) {
+        if (userId == 0) {
+            User targetUser = userRepository.findByUsername(username).get();
+            Collection<Post> posts = postRepository.findByAuthor(targetUser).get();
+            ProfileInfo profileInfo = new ProfileInfo(targetUser.getUsername(), targetUser.getFriends(), posts, targetUser.getFriendRequests());
+            return profileInfo;
+        }
         User targetUser = userRepository.findById(userId).get();
         Optional<User> optionalUser = userRepository.findByUsername(username);
 
         Collection<Post> posts = postRepository.findByAuthor(targetUser).get();
         Collection<User> friends = targetUser.getFriends();
         Collection<User> friendRequests = targetUser.getFriendRequests();
-        ProfileInfo profileInfo = new ProfileInfo(targetUser.getUsername(), friendRequests, friends, posts);
+        ProfileInfo profileInfo = new ProfileInfo(targetUser.getUsername(), friends, posts, friendRequests);
 
         if (targetUser.getProfilePageVisibility() == Visibility.ALL) {
             return profileInfo;
@@ -115,16 +122,13 @@ public class UserService implements UserDetailsService {
         return this.userRepository.save(user);
     }
 
-    public void remove(Long id) {
-        // TODO Auto-generated method stub
-        // Rokha
-        this.userRepository.deleteById(id);
-    }
-    public void remove(String username) {
+    public boolean remove(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isPresent()) {
             userRepository.deleteById(optionalUser.get().getUserId());
+            return true;
         }
+        return false;
     }
 
     ///////// Role

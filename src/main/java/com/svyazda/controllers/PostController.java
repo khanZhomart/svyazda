@@ -32,13 +32,14 @@ public class PostController {
         return ResponseEntity.ok(postService.findAll());
     }
 
-    @GetMapping("/")
+    @Deprecated
+    @GetMapping("/visibilityAll")
     public ResponseEntity<?> findAllWithVisibilityAll() {
         return ResponseEntity.ok(postService.findAllWithVisibilityAll());
     }
 
-    @GetMapping("/authorized")
-    public ResponseEntity<?> findAllWithVisibilityAuthorizedOrFriend(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @GetMapping("/")
+    public ResponseEntity<?> findAllConsideringVisibility(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return ResponseEntity.ok(postService.findAllWithVisibilityAuthorizedOrFriend(UserUtil.getUsernameByToken(request, response)));
     }
 
