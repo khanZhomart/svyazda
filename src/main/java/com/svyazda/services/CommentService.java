@@ -41,12 +41,16 @@ public class CommentService {
     public Comment save(String username, CommentForm commentForm) throws Exception {
         Comment comment = new Comment();
         Post post = postService.findById(commentForm.postId);
+
         if (post.isDisabledComments()) {
             throw new Exception();
         }
+
         comment.setAuthor(userRepository.findByUsername(username).get());
         comment.setPost(post);
+        comment.setText(commentForm.text);
         comment.setCreatedAt(new Date(new java.util.Date().getTime()));
+        
         return commentRepository.save(comment);
     }
 
