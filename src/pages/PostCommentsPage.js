@@ -50,7 +50,6 @@ const PostCommentsPage = (props) => {
     }
 
     return (
-
         <div style={{ 'marginLeft': '40px' }}>
 
             {post === '' ?
