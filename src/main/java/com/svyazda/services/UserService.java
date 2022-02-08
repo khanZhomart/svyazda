@@ -16,6 +16,7 @@ import com.svyazda.repositories.RoleRepository;
 import com.svyazda.repositories.UserRepository;
 import com.svyazda.enums.Visibility;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-
+@Slf4j
 @AllArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
@@ -51,6 +52,12 @@ public class UserService implements UserDetailsService {
     }
 
     public ProfileInfo getProfileInfo(Long userId, String username) {
+        if (userId == 0) {
+            User targetUser = userRepository.findByUsername(username).get();
+            Collection<Post> posts = postRepository.findByAuthor(targetUser).get();
+            ProfileInfo profileInfo = new ProfileInfo(targetUser.getUsername(), targetUser.getFriends(), posts, targetUser.getFriendRequests());
+            return profileInfo;
+        }
         User targetUser = userRepository.findById(userId).get();
         Optional<User> optionalUser = userRepository.findByUsername(username);
 
