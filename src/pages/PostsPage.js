@@ -40,7 +40,7 @@ const PostsPage = () => {
                 </div>
                 <hr></hr>
                 </div>
-            })}
+            }).reverse()}
         </div>
     )
 }
