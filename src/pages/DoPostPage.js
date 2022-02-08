@@ -1,61 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import axios from 'axios'
-import { Redirect, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { UserContext } from '../context/UserContext'
 
 const DoPostPage = () => {
     const history = useHistory()
+    const [title, setTitle] = useState('')
+    const [text, setText] = useState('')
+    const [disabledComments, setDisabledComments] = useState(false)
+    const [visibility, setVisibility] = useState('ALL')
+    const { appToken } = useContext(UserContext)
 
-        axios.post('http://localhost:8080/post_classified',
-            { title, description, price }
+    if(appToken === '') {
+        return <h1>Login to post</h1>
+    }
+
+    const handleChange = () => {
+        setDisabledComments(!disabledComments)
+    }
+
+    const titleHandler = (event) => {
+        setTitle(event.target.value)
+    }
+
+    const textHandler = (event) => {
+        setText(event.target.value)
+    }
+
+    const visibilityHandler = (event) => {
+        setVisibility(event.target.value)
+    }
+
+    const submitHandler = (event) => {
+        event.preventDefault()
+        axios.post('http://localhost:8080/post-api/',
+            { title: title, text: text, disabledComments: disabledComments, visibility: visibility }
             ,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${appToken}`
                 }
             }
-        ).then(response => {
-            console.log(response.data.access_token)
-        }).catch(error => {
-            console.log(error.response)
-            console.log(localStorage.getItem('refresh_token'))
-
-            if (error.response.data.access_token.includes('The Token has expired on')) {
-                axios.get('http://localhost:8080/token/refresh'
-                    ,
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('refresh_token')}`
-                        }
-                    }
-                ).then(response => {
-                    console.log(response.data)
-                    localStorage.setItem('token', response.data.access_token)
-                    localStorage.setItem('refresh_token', response.data.refresh_token)
-                    axios.post('http://localhost:8080/post_classified',
-                        { title, description, price }
-                        ,
-                        {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${response.data.access_token}`
-                            }
-                        }
-                    ).then(response => {
-                        console.log(response.data)
-                    })
-                }).catch(error => {
-                    history.push('/login')
-                })
-            }
-
-        })
+        )
     }
-
-    function handleChange() {
-		setDisabledComments(!disabledComments)
-	}
 
     return (
         <div>
@@ -66,14 +54,19 @@ const DoPostPage = () => {
                 <input type='checkbox' placeholder='disable comments' checked={disabledComments} onChange={handleChange} />
                 <button >post</button>
             </form>
-            <label>Category</label>
+            <label>Visible to</label>
             <select onChange={visibilityHandler}>
-                <option value='None'>None</option>
-                <option value='Tech'>Tech</option>
-                <option value='Properties'>Properties</option>
+                <option value='ALL'>all</option>
+                <option value='AUTHORIZED'>authorized</option>
+                <option value='FRIENDS'>friends</option>
             </select>
         </div>
     )
 }
+
+
+
+
+
 
 export default DoPostPage

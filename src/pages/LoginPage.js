@@ -10,7 +10,7 @@ const LoginPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
-    const {appToken, setAppToken, appUsername, setAppUsername} = useContext(UserContext)
+    const {setAppToken, setAppUsername} = useContext(UserContext)
 
     const usernameHandler = (event) => {
         setUsername(event.target.value)
