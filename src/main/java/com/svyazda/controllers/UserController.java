@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 
 @AllArgsConstructor
@@ -57,6 +58,13 @@ class UserController {
     @GetMapping("/profile")
     public ResponseEntity<?> profileInfo(@RequestParam Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         return ResponseEntity.ok(Converter.ObjectToJson(userService.getProfileInfo(id, UserUtil.getUsernameByToken(request, response))));
+    }
+
+    @PostMapping("/token")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+        userService.refreshToken(request, response, authorizationHeader);
     }
 
 }
