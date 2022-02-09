@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import './css/register-page.css'
 
+import { Form, Button } from 'react-bootstrap'
+import FadeIn from 'react-fade-in/lib/FadeIn'
 
 const RegisterPage = () => {
     const [username, setUsername] = useState('')
@@ -22,16 +23,29 @@ const RegisterPage = () => {
             console.log(response)
             
         })
-
     }
 
 
     return (
-        <div className="register-page">
-            <h1>Register</h1>
-            <input placeholder='username'  onChange={usernameHandler} />
-            <input placeholder='password'  onChange={passwordHandler} />
-            <button onClick={submitHandler}>register</button>  
+        <div className="d-flex justify-content-center mt-5">
+            <FadeIn>
+                <Form className="w-100">
+                    <h2>Registration</h2>
+                    <Form.Group className="mt-4 mb-3" controlId="formBasicEmail">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control onChange={usernameHandler} type="text" placeholder="Enter username" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control onChange={passwordHandler} type="password" placeholder="Password" />
+                    </Form.Group>
+
+                    <Button onClick={submitHandler} variant="primary" type="submit">
+                        Submit
+                    </Button>
+                </Form>
+            </FadeIn>
         </div>
     )
 }

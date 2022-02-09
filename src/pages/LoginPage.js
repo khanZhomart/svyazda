@@ -4,7 +4,8 @@ import qs from 'qs'
 import './css/login-page.css'
 import { UserContext } from '../context/UserContext'
 
-
+import { Form, Button, Fade } from 'react-bootstrap'
+import FadeIn from 'react-fade-in/lib/FadeIn'
 
 const LoginPage = () => {
     const [username, setUsername] = useState('')
@@ -38,13 +39,25 @@ const LoginPage = () => {
 
 
     return (
-        <div className="login-page">
-            <h1>Login</h1>
-            <form onSubmit={submitHandler}>
-                <input placeholder='username' onChange={usernameHandler} />
-                <input placeholder='password' onChange={passwordHandler} />
-                <button>login</button>
-            </form>
+        <div className="d-flex justify-content-center mt-5">
+            <FadeIn>
+                <Form className="w-100">
+                    <h2>Login</h2>
+                    <Form.Group className="mt-4 mb-3" controlId="formBasicEmail">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control onChange={usernameHandler} type="text" placeholder="Enter username" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control onChange={passwordHandler} type="password" placeholder="Password" />
+                    </Form.Group>
+
+                    <Button onClick={submitHandler} variant="primary" type="submit">
+                        Submit
+                    </Button>
+                </Form>
+            </FadeIn>
         </div>
     )
 }
