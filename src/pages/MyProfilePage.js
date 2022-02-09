@@ -6,7 +6,6 @@ import { NavLink } from 'react-router-dom'
 import { Card, ListGroup } from 'react-bootstrap'
 
 const MyProfilePage = () => {
-
     const [profile, setProfile] = useState({})
     const {appToken} = useContext(UserContext)
     const [success, setSuccess] = useState(true)
