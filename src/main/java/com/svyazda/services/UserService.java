@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 import com.svyazda.dtos.ProfileInfo;
@@ -34,6 +35,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final PostService postService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -60,16 +62,28 @@ public class UserService implements UserDetailsService {
         }
         User targetUser = userRepository.findById(userId).get();
         Optional<User> optionalUser = userRepository.findByUsername(username);
-
-        Collection<Post> posts = postRepository.findByAuthor(targetUser).get();
         Collection<User> friends = targetUser.getFriends();
         Collection<User> friendRequests = targetUser.getFriendRequests();
+
+        Collection<Post> posts = postRepository.findByAuthor(targetUser).get();
+
+        if (optionalUser.isPresent() && !friends.contains(optionalUser.get())) {
+            // filter for non-friend
+            posts = posts.stream().filter(
+                    post -> post.getVisibility() != Visibility.FRIENDS).collect(Collectors.toList());
+        }
+        if (optionalUser.isEmpty()) {
+            // filter for non-authorized
+            posts = posts.stream().filter(
+                    post -> post.getVisibility() != Visibility.AUTHORIZED).collect(Collectors.toList());
+        }
+
         ProfileInfo profileInfo = new ProfileInfo(targetUser.getUsername(), friends, posts, friendRequests);
 
         if (targetUser.getProfilePageVisibility() == Visibility.ALL) {
             return profileInfo;
         }
-        else if (targetUser.getProfilePageVisibility() == Visibility.FRIENDS &&
+        else if (optionalUser.isPresent() && targetUser.getProfilePageVisibility() == Visibility.FRIENDS &&
                 targetUser.getFriends().contains(optionalUser.get())) {
                 return profileInfo;
         } else if (targetUser.getProfilePageVisibility() == Visibility.AUTHORIZED && optionalUser.isPresent()) {
