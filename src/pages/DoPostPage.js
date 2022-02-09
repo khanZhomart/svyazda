@@ -5,7 +5,6 @@ import { UserContext } from '../context/UserContext'
 import './css/do-post-page.css'
 
 const DoPostPage = () => {
-    const history = useHistory()
     const [title, setTitle] = useState('')
     const [text, setText] = useState('')
     const [disabledComments, setDisabledComments] = useState(false)
