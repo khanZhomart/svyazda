@@ -11,8 +11,8 @@ const ProfilePage = () => {
     const [isFriend, setIsFriend] = useState(false)
     const { profileId } = useParams()
 
-    useEffect(async () => {
-        await axios.get(`http://localhost:8080/user-api/profile?id=${profileId}`,
+    useEffect(() => {
+        axios.get(`http://localhost:8080/user-api/profile?id=${profileId}`,
             {
                 headers:
                 {
@@ -48,7 +48,11 @@ const ProfilePage = () => {
 
     return (
         <div className="profile-page">
-            {profile == '' ? <div><h1>Denied. Either login or add to friends</h1></div> :
+            {profile == '' ? 
+                <div>
+                    <h1>Denied. Either login or add to friends</h1>
+                </div> 
+            :
                 <div>
                     <h1>Profile</h1>
                     <h3>Username:  {profile === null ? null : profile.username}</h3>

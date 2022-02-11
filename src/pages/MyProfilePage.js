@@ -95,13 +95,16 @@ const MyProfilePage = () => {
             <h3>Username: </h3>{profile.username}
             <hr></hr>
             <h3>Posts: </h3>
-            {profile.posts === undefined ? null : profile.posts.map((post, key) => {
+            {profile.posts === undefined ? 
+                null 
+            : 
+                profile.posts.map((post, key) => {
                 return <div>
                     <div key={key}>
                     <h3>{post.title}</h3>
-                    ---
+                    ---------
                     <p>{post.text}</p>
-                    ---
+                    ---------
                     <p>author: {post.author.username}</p>
                     {post.disabledComments ? <div><p>comments disabled</p> <button onClick={() => enableComments(post.postId)}>enable</button></div> : <div><NavLink to={`/post-comments/${post.postId}`} >comments section</NavLink><button onClick={() => disableComments(post.postId)}>disable</button></div> }
                 </div>

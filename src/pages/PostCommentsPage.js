@@ -10,12 +10,13 @@ const PostCommentsPage = (props) => {
     const { postId } = useParams()
     const { appToken } = useContext(UserContext)
 
-    useEffect(async () => {
-        await axios.get(`http://localhost:8080/comment-api/post-comments?postId=${postId}`)
+    useEffect(() => {
+        axios.get(`http://localhost:8080/comment-api/post-comments?postId=${postId}`)
             .then(response => {
                 setComments(response.data)
             })
-        await axios.get(`http://localhost:8080/post-api/post?id=${postId}`,
+
+        axios.get(`http://localhost:8080/post-api/post?id=${postId}`,
             {
                 headers:
                 {
@@ -35,7 +36,10 @@ const PostCommentsPage = (props) => {
     const submitComment = async (event) => {
         event.preventDefault()
         await axios.post(`http://localhost:8080/comment-api/`,
-            { postId: postId, text: yourComment },
+            { 
+                postId: postId, 
+                text: yourComment 
+            },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,36 +59,41 @@ const PostCommentsPage = (props) => {
             {post === '' ?
                 <h2>Comments are disabled</h2>
                 :
-                <div  >
+                <div>
                     <div style={{ border: '5px solid rgba(0, 0, 0, 0.5)', padding: '5px' }}> 
                         <h3>{post.title}</h3>
-                        ---
+                        -------
                         <p>{post.text}</p>
-                        ---
-                        {post.author !== undefined ? <p>author: {post.author.username}</p> : null}
-                        <p>posted on: {post.createdAt}</p>
+                        -------
+                        {post.author !== undefined ? 
+                            <p>
+                                author: {post.author.username}
+                            </p> 
+                        : 
+                            null
+                        }
+                        <p>
+                            posted on: {post.createdAt}
+                        </p>
                     </div>
 
-
-
-
                     <h4>Comments:</h4>
-                    {appToken === '' ? <p>Login to comment</p> :
-                        <div>
-                            <input placeholder='Your comment' value={yourComment} onChange={commentHandler} />
-                            <button onClick={submitComment}>Leave comment</button>
-                        </div>
-                    }
-                    {comments.map((comment, key) => {
-                        return <div>
-                            <div key={key}>
-                                <h3>{comment.author.username}</h3>
-                                <p>{comment.text}</p>
-                                <p>date: {comment.createdAt}</p>
+                        {appToken === '' ? <p>Login to comment</p> :
+                            <div>
+                                <input placeholder='Your comment' value={yourComment} onChange={commentHandler} />
+                                <button onClick={submitComment}>Leave comment</button>
                             </div>
-                            <hr></hr>
-                        </div>
-                    }).reverse()}
+                        }
+                        {comments.map((comment, key) => {
+                            return <div>
+                                <div key={key}>
+                                    <h3>{comment.author.username}</h3>
+                                    <p>{comment.text}</p>
+                                    <p>date: {comment.createdAt}</p>
+                                </div>
+                                <hr></hr>
+                            </div>
+                        }).reverse()}
                 </div>
             }
 
