@@ -58,6 +58,7 @@ public class UserService implements UserDetailsService {
             ProfileInfo profileInfo = new ProfileInfo(targetUser.getUsername(), targetUser.getFriends(), posts, targetUser.getFriendRequests());
             return profileInfo;
         }
+
         User targetUser = userRepository.findById(userId).get();
         Optional<User> optionalUser = userRepository.findByUsername(username);
 
@@ -69,9 +70,10 @@ public class UserService implements UserDetailsService {
         if (targetUser.getProfilePageVisibility() == Visibility.ALL) {
             return profileInfo;
         }
+
         else if (targetUser.getProfilePageVisibility() == Visibility.FRIENDS &&
-                targetUser.getFriends().contains(optionalUser.get())) {
-                return profileInfo;
+            targetUser.getFriends().contains(optionalUser.get())) {
+            return profileInfo;
         } else if (targetUser.getProfilePageVisibility() == Visibility.AUTHORIZED && optionalUser.isPresent()) {
             return profileInfo;
         }
@@ -87,36 +89,38 @@ public class UserService implements UserDetailsService {
     public User update(User payload) {
         User user = userRepository.findById(payload.getUserId()).get();
 
-        if (payload.getUsername() != "") {
+        if (payload.getUsername() != "") 
             user.setUsername(payload.getUsername());
-        }
-        if (payload.getPassword() != "") {
+        
+        if (payload.getPassword() != "") 
             user.setPassword(passwordEncoder.encode(payload.getPassword()));
-        }
+        
         return this.userRepository.save(user);
     }
 
     public User update(UpdateUserForm payload, String username) {
         User user = userRepository.findByUsername(username).get();
 
-        if (payload.username != "" && payload.username != null) {
+        if (payload.username != "" && payload.username != null)
             user.setUsername(payload.username);
-        }
-        if (payload.profilePageVisibility != null) {
+        
+        if (payload.profilePageVisibility != null)
             user.setProfilePageVisibility(payload.profilePageVisibility);
-        }
-        if (payload.password != "" && payload.password != null) {
+        
+        if (payload.password != "" && payload.password != null)
                 user.setPassword(passwordEncoder.encode(payload.password));
-        }
+        
         return this.userRepository.save(user);
     }
 
     public boolean remove(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
+
         if (optionalUser.isPresent()) {
             userRepository.deleteById(optionalUser.get().getUserId());
             return true;
         }
+
         return false;
     }
 
@@ -124,12 +128,14 @@ public class UserService implements UserDetailsService {
     public Role saveRole(Role role) {
         return roleRepository.save(role);
     }
+
     @Transactional
     public void addRoleToUser(String username, String roleName) {
         User user = userRepository.findByUsername(username).get();
         Role role = roleRepository.findByName(roleName);
         user.getRoles().add(role);
     }
+
     public void removeRole(String roleName) {
         roleRepository.deleteByName(roleName);
     }
@@ -138,14 +144,17 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isEmpty()) {
+
+        if (userOptional.isEmpty())
             throw new UsernameNotFoundException("not found");
-        }
+
         User user = userOptional.get();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
         user.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
+        
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 }

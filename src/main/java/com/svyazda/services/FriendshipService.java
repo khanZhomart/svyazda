@@ -16,17 +16,20 @@ public class FriendshipService {
     public boolean sendFriendRequest(String sourceUserUsername, Long targetId) {
         User sourceUser = userRepository.findByUsername(sourceUserUsername).get();
         User targetUser = userService.findById(targetId);
+
         if (!sourceUser.getFriends().contains(targetUser) && !targetUser.getFriendRequests().contains(sourceUser)) {
             targetUser.getFriendRequests().add(sourceUser);
             userRepository.save(targetUser);
             return true;
         }
+
         return false;
     }
 
     public boolean acceptFriendRequest(Long sourceId, String targetUserUsername) {
         User targetUser = userRepository.findByUsername(targetUserUsername).get();
         User sourceUser = userService.findById(sourceId);
+
         if (targetUser.getFriendRequests().contains(sourceUser)) {
             targetUser.getFriendRequests().remove(sourceUser);
             sourceUser.getFriendRequests().remove(targetUser);
@@ -36,6 +39,7 @@ public class FriendshipService {
             userRepository.save(sourceUser);
             return true;
         }
+        
         return false;
     }
 
