@@ -38,7 +38,6 @@ public class User {
     @JsonIgnore
     Collection<User> friendRequests = new ArrayList<>();
 
-
     @ManyToMany
     @JoinColumn(name = "friends", referencedColumnName = "userId")
     @JsonIgnore
