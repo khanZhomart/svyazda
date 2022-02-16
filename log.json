@@ -1,22 +1,8 @@
 [
   {
-    "time": "16/02/2022 06:29:26",
-    "type": "logging attempt",
-    "username": "rakha"
-  },
-  {
-    "time": "16/02/2022 06:29:27",
-    "type": "successfully logging in",
-    "username": "rakha"
-  },
-  {
-    "time": "16/02/2022 06:29:30",
-    "type": "logging attempt",
-    "username": "rakha"
-  },
-  {
-    "time": "16/02/2022 06:29:30",
-    "type": "unsuccessfully logging in",
-    "username": "rakha"
+    "name": "getting all users",
+    "time": "17/02/2022 05:21:32",
+    "type": "RESPONSE",
+    "info": 2
   }
 ]

@@ -1,5 +1,6 @@
 package com.svyazda.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.svyazda.dtos.UpdateUserForm;
 import com.svyazda.entities.Post;
 import com.svyazda.entities.Role;
 import com.svyazda.entities.User;
+import com.svyazda.logging.LoggerToJson;
 import com.svyazda.repositories.PostRepository;
 import com.svyazda.repositories.RoleRepository;
 import com.svyazda.repositories.UserRepository;
@@ -95,13 +97,13 @@ public class UserService implements UserDetailsService {
 
         if (targetUser.getProfilePageVisibility() == Visibility.ALL)
             return profileInfo;
-        else if (optionalUser.isPresent() && 
+        else if (optionalUser.isPresent() &&
             targetUser.getProfilePageVisibility() == Visibility.FRIENDS &&
             targetUser.getFriends().contains(optionalUser.get())) {
             return profileInfo;
         } else if (targetUser.getProfilePageVisibility() == Visibility.AUTHORIZED && optionalUser.isPresent())
             return profileInfo;
-        
+
         return null;
     }
 
@@ -209,6 +211,13 @@ public class UserService implements UserDetailsService {
 
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+
+                Map<String, Object> map = new HashMap<>();
+                map.put("type", "successfully token refreshing");
+                map.put("access_token", access_token);
+                map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+                LoggerToJson.writeToLogs(map);
             } catch (Exception e) {
                 response.setHeader("Error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
@@ -217,6 +226,13 @@ public class UserService implements UserDetailsService {
                 error.put("error_message", e.getMessage());
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
+
+                Map<String, Object> map = new HashMap<>();
+                map.put("type", "error token refreshing");
+                map.put("access_token", null);
+                map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+                LoggerToJson.writeToLogs(map);
             }
         } else {
             throw new RuntimeException("Refresh token is missing");

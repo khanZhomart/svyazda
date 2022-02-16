@@ -1,5 +1,7 @@
 package com.svyazda.logging;
 
+import ch.qos.logback.classic.PatternLayout;
+import ch.qos.logback.core.rolling.RollingFileAppender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,14 +10,17 @@ import org.svenson.JSONParser;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class Logger {
+public class LoggerToJson {
 
     protected static List<Object> data = new ArrayList<Object>();
+    private static final Date date = new Date();
 
     public static void writeToLogs(Map<String, Object> map) throws IOException {
         try {
@@ -24,6 +29,16 @@ public class Logger {
             //final Object object = mapper.convertValue(map, Object.class);
 
             readFromLogs();
+
+            if (Files.size(Paths.get("log.json")) > 10000) {
+                data = new ArrayList<Object>();
+            }
+
+            //System.out.println(date.getTime() / 1000);
+            //System.out.println((new Date().getTime() - date.getTime()) / 1000);
+            if ((new Date().getTime() - date.getTime()) / 1000 > 86400) {
+                data = new ArrayList<Object>();
+            }
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

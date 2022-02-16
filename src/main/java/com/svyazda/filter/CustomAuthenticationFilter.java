@@ -3,7 +3,7 @@ package com.svyazda.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.svyazda.logging.Logger;
+import com.svyazda.logging.LoggerToJson;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -44,12 +44,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         log.info("Password is: {}", password);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("type", "logging attempt");
+        map.put("type", "REQUEST (POST)");
+        map.put("name", "logging attempt");
         map.put("username", username);
+        map.put("password", password);
         map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 
-        System.out.println(map);
-        Logger.writeToLogs(map);
+        LoggerToJson.writeToLogs(map);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
@@ -84,21 +85,23 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("type", "successfully logging in");
+        map.put("type", "RESPONSE");
+        map.put("name", "successfully logging in");
         map.put("username", request.getParameter("username"));
         map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 
-        Logger.writeToLogs(map);
+        LoggerToJson.writeToLogs(map);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         Map<String, Object> map = new HashMap<>();
-        map.put("type", "unsuccessfully logging in");
+        map.put("type", "RESPONSE");
+        map.put("name", "unsuccessfully logging in");
         map.put("username", request.getParameter("username"));
         map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 
-        Logger.writeToLogs(map);
+        LoggerToJson.writeToLogs(map);
     }
 }
 
