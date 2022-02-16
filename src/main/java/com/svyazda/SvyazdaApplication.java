@@ -1,5 +1,7 @@
 package com.svyazda;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.svyazda.entities.Role;
 import com.svyazda.entities.User;
 import com.svyazda.repositories.UserRepository;
@@ -12,6 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 @SpringBootApplication
@@ -39,9 +44,9 @@ public class SvyazdaApplication {
 			userService.save(rakhman);
 			userService.save(azhar);
 
-
 			userService.addRoleToUser("rakha", "ROLE_USER");
 			userService.addRoleToUser("azhar", "ROLE_USER");
+
 		};
 	}
 
