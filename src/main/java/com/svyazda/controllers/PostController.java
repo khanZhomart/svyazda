@@ -3,6 +3,7 @@ package com.svyazda.controllers;
 
 import com.svyazda.dtos.UpdatePostForm;
 import com.svyazda.entities.Post;
+import com.svyazda.logging.LoggerToJson;
 import com.svyazda.services.PostService;
 import com.svyazda.utils.UserUtil;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 import java.util.Collection;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @AllArgsConstructor
@@ -35,12 +42,32 @@ public class PostController {
 
     @PostMapping("/")
     public ResponseEntity<?> save(@RequestBody Post post, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "creating post");
+        map.put("type", "REQUEST");
+        map.put("author",  post.getAuthor());
+        map.put("title", post.getTitle());
+        map.put("text", post.getText());
+        map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+        LoggerToJson.writeToLogs(map);
+
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("name", "creating post");
+        map1.put("type", "RESPONSE");
+        map1.put("body", postService.save(post, UserUtil.getUsernameByToken(request, response)));
+        map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+        LoggerToJson.writeToLogs(map1);
+
         return ResponseEntity.ok(postService.save(post, UserUtil.getUsernameByToken(request, response)));
     }
 
     @Deprecated
     @GetMapping("/all")
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll() throws IOException {
+
         return ResponseEntity.ok(postService.findAll());
     }
 
@@ -52,6 +79,22 @@ public class PostController {
 
     @GetMapping("/")
     public ResponseEntity<?> findAllConsideringVisibility(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "getting all posts");
+        map.put("type", "REQUEST (GET)");
+        map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+        LoggerToJson.writeToLogs(map);
+
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("name", "getting all posts");
+        map1.put("type", "RESPONSE");
+        map1.put("info", postService.findAll().size());
+        map1.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+        LoggerToJson.writeToLogs(map1);
+
         return ResponseEntity.ok(postService.findAllWithVisibilityAuthorizedOrFriend(UserUtil.getUsernameByToken(request, response)));
     }
 

@@ -42,9 +42,8 @@ public class CommentService {
         Comment comment = new Comment();
         Post post = postService.findById(commentForm.postId);
 
-        if (post.isDisabledComments()) {
+        if (post.isDisabledComments())
             throw new Exception();
-        }
 
         comment.setAuthor(userRepository.findByUsername(username).get());
         comment.setText(commentForm.text);
@@ -58,22 +57,23 @@ public class CommentService {
     public Comment update(com.svyazda.dtos.UpdateCommentForm updateCommentForm, String username) {
         User user = userRepository.findByUsername(username).get();
         Comment comment = commentRepository.findById(updateCommentForm.id).get();
-        if (!comment.getAuthor().equals(user)) {
-            return null;
-        }
 
-        if (updateCommentForm.text != "" && updateCommentForm.text != null) {
+        if (!comment.getAuthor().equals(user))
+            return null;
+
+        if (updateCommentForm.text != "" && updateCommentForm.text != null)
             comment.setText(updateCommentForm.text);
-        }
+        
         return commentRepository.save(comment);
     }
 
     public boolean remove(Long id, String username) {
         User user = userRepository.findByUsername(username).get();
         Comment comment = commentRepository.findById(id).get();
-        if (!comment.getAuthor().equals(user)) {
+
+        if (!comment.getAuthor().equals(user))
             return false;
-        }
+        
         commentRepository.deleteById(id);
         return true;
     }

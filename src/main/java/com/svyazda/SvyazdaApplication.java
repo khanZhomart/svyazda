@@ -1,10 +1,13 @@
 package com.svyazda;
 
+
 import com.svyazda.entities.Role;
 import com.svyazda.entities.User;
 import com.svyazda.repositories.UserRepository;
 import com.svyazda.services.UserService;
 import com.svyazda.enums.Visibility;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,9 +42,9 @@ public class SvyazdaApplication {
 			userService.save(rakhman);
 			userService.save(azhar);
 
-
 			userService.addRoleToUser("rakha", "ROLE_USER");
 			userService.addRoleToUser("azhar", "ROLE_USER");
+
 		};
 	}
 

@@ -3,6 +3,8 @@ package com.svyazda.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.svyazda.logging.LoggerToJson;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +34,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         this.authenticationManager = authenticationManager;
     }
 
+    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String username = request.getParameter("username").replaceAll("\"", "");
@@ -38,6 +42,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         log.info("Username is: {}", username);
         log.info("Password is: {}", password);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", "REQUEST (POST)");
+        map.put("name", "logging attempt");
+        map.put("username", username);
+        map.put("password", password);
+        map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+        LoggerToJson.writeToLogs(map);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
@@ -70,6 +83,25 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", "RESPONSE");
+        map.put("name", "successfully logging in");
+        map.put("username", request.getParameter("username"));
+        map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+        LoggerToJson.writeToLogs(map);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", "RESPONSE");
+        map.put("name", "unsuccessfully logging in");
+        map.put("username", request.getParameter("username"));
+        map.put("time", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+        LoggerToJson.writeToLogs(map);
     }
 }
 
