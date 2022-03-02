@@ -76,22 +76,24 @@ public class UserService implements UserDetailsService {
             ProfileInfo profileInfo = new ProfileInfo(targetUser.getUsername(), targetUser.getFriends(), posts, targetUser.getFriendRequests());
             return profileInfo;
         }
-        User targetUser = userRepository.findById(userId).get();
+        User targetUser = userRepository.findById(userId).orElse(null);
         Optional<User> optionalUser = userRepository.findByUsername(username);
         Collection<User> friends = targetUser.getFriends();
         Collection<User> friendRequests = targetUser.getFriendRequests();
 
-        Collection<Post> posts = postRepository.findByAuthor(targetUser).get();
+        Collection<Post> posts = postRepository.findByAuthor(targetUser).orElse(null);
 
         if (optionalUser.isPresent() && !friends.contains(optionalUser.get())) {
             // filter for non-friend
-            posts = posts.stream().filter(
-                    post -> post.getVisibility() != Visibility.FRIENDS).collect(Collectors.toList());
+            posts = posts.stream()
+                    .filter(post -> post.getVisibility() != Visibility.FRIENDS)
+                    .collect(Collectors.toList());
         }
         if (optionalUser.isEmpty()) {
             // filter for non-authorized
-            posts = posts.stream().filter(
-                    post -> post.getVisibility() != Visibility.AUTHORIZED).collect(Collectors.toList());
+            posts = posts.stream()
+                    .filter(post -> post.getVisibility() != Visibility.AUTHORIZED)
+                    .collect(Collectors.toList());
         }
 
         ProfileInfo profileInfo = new ProfileInfo(targetUser.getUsername(), friends, posts, friendRequests);

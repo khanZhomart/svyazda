@@ -7,17 +7,29 @@ import com.svyazda.services.PostService;
 import com.svyazda.utils.UserUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/post-api/")
 public class PostController {
+
+    // ws-related
+    @MessageMapping("/message")
+    @SendTo("/chatroom/public")
+    public Collection<Post> receiveMessage(@Payload Post post){
+        postService.save(post, "rakha");
+        return postService.findAll();
+    }
 
     private final PostService postService;
 
